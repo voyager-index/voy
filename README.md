@@ -30,7 +30,9 @@ voy search portland
     "elevation": 61,
     "pollution": "27.61514529",
     "palms": false,
-// ...
+    "...": "...",
+    "...": "...",
+    "...": "...",
     "uvjan": 207,
     "uvfeb": 181,
     "uvmar": 131,
