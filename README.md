@@ -16,6 +16,7 @@ export GOPATH=$HOME/go
 go get -v github.com/voyager-index/voy
 export PATH=$PATH:$HOME/go/bin
 ```
+For Windows, see this [resource](https://github.com/golang/go/wiki/SettingGOPATH#windows).
 
 ## Usage
 
