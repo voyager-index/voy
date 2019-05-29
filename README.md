@@ -11,7 +11,9 @@ Check to see if your machine arhcitecture is included in the [releases page](htt
 ### Source
 
 ```sh
-go get github.com/voyager-index/voy
+mkdir $HOME/go
+export GOPATH=$HOME/go
+go get -v github.com/voyager-index/voy
 export PATH=$PATH:$HOME/go/bin
 ```
 
