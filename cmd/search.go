@@ -35,9 +35,9 @@ func MakeRequest(city string) {
     }
 
     // use with local development
-    url := "http://localhost:5000/city-search"
+    // url := "http://localhost:5000/city-search"
     // use for production
-    //url := "http://voyager-index.herokuapp.com/city-search"
+    url := "http://voyager-index.herokuapp.com/city-search"
 
     bytes := bytes.NewBuffer(bytesRepresentation)
     resp, err := http.Post(url, "application/json", bytes)
