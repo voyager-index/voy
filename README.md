@@ -4,10 +4,19 @@ Interact with Voyager Index from the comfort of the command line.
 
 ## Installation
 
+### Binary
+
+Check to see if your machine arhcitecture is included in the [releases page](https://github.com/voyager-index/voy/releases).
+
+### Source
+
 ```sh
-go get github.com/voyager-index/voy
+mkdir $HOME/go
+export GOPATH=$HOME/go
+go get -v github.com/voyager-index/voy
 export PATH=$PATH:$HOME/go/bin
 ```
+For Windows, see this [resource](https://github.com/golang/go/wiki/SettingGOPATH#windows).
 
 ## Usage
 
@@ -54,6 +63,9 @@ voy search portland
 
 ## Development
 
+- [Install Go](https://golang.org/dl/)
+
+- To build releases, enter:
 ```sh
 ./cross-compile.sh main.go
 
