@@ -17,13 +17,16 @@ then
 fi
 
 platforms=(
-    "windows/amd64"
-    "windows/386"
     "darwin/amd64"
-    "linux/amd64"
+    "freebsd/amd64"
     "linux/386"
+    "linux/amd64"
     "linux/arm"
     "linux/arm64"
+    "netbsd/amd64"
+    "openbsd/amd64"
+    "windows/386"
+    "windows/amd64"
 )
 
 i=1

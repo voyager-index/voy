@@ -20,13 +20,23 @@ var searchCmd = &cobra.Command{
     voy search "Portland"
     `,
     Run: func(cmd *cobra.Command, args []string) {
-        MakeRequest(args[0]);
+        rank, _:= cmd.Flags().GetBool("rank")
+        MakeRequest(args[0], rank);
     },
 }
 
-func MakeRequest(city string) {
-    data := map[string]interface{}{
-        "city": city,
+func MakeRequest(city string, rank bool) {
+    var data map[string]interface{}
+
+    if (rank == true) {
+        data = map[string]interface{}{
+            "city": city,
+            "rank": true,
+        }
+    } else {
+        data = map[string]interface{}{
+            "city": city,
+        }
     }
 
     bytesRepresentation, err := json.Marshal(data)
@@ -37,7 +47,7 @@ func MakeRequest(city string) {
     // use with local development
     // url := "http://localhost:5000/city-search"
     // use for production
-    url := "http://voyager-index.herokuapp.com/city-search"
+    url := "https://voyager-index.herokuapp.com/city-search"
 
     bytes := bytes.NewBuffer(bytesRepresentation)
     resp, err := http.Post(url, "application/json", bytes)
@@ -55,6 +65,7 @@ func MakeRequest(city string) {
 }
 
 func init() {
+    var rank bool
     rootCmd.AddCommand(searchCmd)
 
     // Here you will define your flags and configuration settings.
@@ -66,4 +77,6 @@ func init() {
     // Cobra supports local flags which will only run when this command
     // is called directly, e.g.:
     // searchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+    rootCmd.PersistentFlags().BoolVarP(&rank, "rank", "r", false, "return rank information.")
 }
