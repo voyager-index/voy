@@ -17,25 +17,32 @@ var searchCmd = &cobra.Command{
     Use:   "search",
     Short: "Search the database for cities matching a query.",
     Long: `Try searching for cities called Portland:
-    voy search "Portland"
+    voy search --color --rank --name "portland"
     `,
     Run: func(cmd *cobra.Command, args []string) {
         rank, _:= cmd.Flags().GetBool("rank")
-        MakeRequest(args[0], rank);
+        color, _:= cmd.Flags().GetBool("color")
+        id, _:= cmd.Flags().GetInt("id")
+        name, _:= cmd.Flags().GetString("name")
+        MakeRequest(name, rank, color, id);
     },
 }
 
-func MakeRequest(city string, rank bool) {
+func MakeRequest(name string, rank bool, color bool, id int) {
     var data map[string]interface{}
 
-    if (rank == true) {
+    if (id > 0) {
         data = map[string]interface{}{
-            "city": city,
+            "id": id,
+        }
+    } else if (rank == true) {
+        data = map[string]interface{}{
+            "city": name,
             "rank": true,
         }
     } else {
         data = map[string]interface{}{
-            "city": city,
+            "city": name,
         }
     }
 
@@ -45,9 +52,9 @@ func MakeRequest(city string, rank bool) {
     }
 
     // use with local development
-    // url := "http://localhost:5000/city-search"
+    url := "http://localhost:5000/city-search"
     // use for production
-    url := "https://voyager-index.herokuapp.com/city-search"
+    // url := "https://voyager-index.herokuapp.com/city-search"
 
     bytes := bytes.NewBuffer(bytesRepresentation)
     resp, err := http.Post(url, "application/json", bytes)
@@ -60,12 +67,20 @@ func MakeRequest(city string, rank bool) {
         log.Fatalln(err)
     }
 
-    pre := string(pretty.Color(pretty.Pretty(src), nil))
+    pre := ""
+    if (color == true) {
+        pre = string(pretty.Color(pretty.Pretty(src), nil))
+    } else {
+        pre = string(pretty.Pretty(src))
+    }
     fmt.Println(pre)
 }
 
 func init() {
     var rank bool
+    var color bool
+    var id int
+    var name string
     rootCmd.AddCommand(searchCmd)
 
     // Here you will define your flags and configuration settings.
@@ -79,4 +94,7 @@ func init() {
     // searchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
     rootCmd.PersistentFlags().BoolVarP(&rank, "rank", "r", false, "return rank information.")
+    rootCmd.PersistentFlags().BoolVarP(&color, "color", "c", false, "enable colored output.")
+    rootCmd.PersistentFlags().IntVarP(&id, "id", "i", 0, "search based on city id.")
+    rootCmd.PersistentFlags().StringVarP(&name, "name", "n", "", "search based on city name.")
 }

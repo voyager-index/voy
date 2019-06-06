@@ -40,11 +40,27 @@ do
         output_name+='.exe'
     fi
 
-    echo "Building $i/${#platforms[@]}: $output_name"
+    printf "%-11s %-6s %-30s\n" "Building" "$i/${#platforms[@]}:" "$output_name"
     env GOOS=$GOOS GOARCH=$GOARCH go build -o $build_dir/$output_name $package
     if [ $? -ne 0 ]; then
         echo 'An error has occurred! Aborting the script execution...'
         exit 1
+    fi
+    ((i+=1))
+done
+
+rm -rf ./"$build_dir"/*.zip
+rm -rf ./"$build_dir"/*.tar.gz
+
+i=1
+for file in "$build_dir"/*
+do
+    printf "%-11s %-6s %-30s\n" "Compressing" "$i/${#platforms[@]}:" "$(basename $file)"
+    if echo "$file" | grep -q "windows"
+    then
+        zip --quiet "$file.zip" "$file"
+    else
+        tar -zcf "$file.tar.gz" "$file"
     fi
     ((i+=1))
 done
