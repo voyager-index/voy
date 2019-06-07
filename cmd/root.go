@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
     Short: "A CLI for the Voyager Index project.",
     Long: `Search for cities and ranking from the comfort of your shell.
 Easily send POST requests to http://voyager-index.herokuapp.com/.`,
-    Version: "0.1.3",
+    Version: "0.1.4",
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
