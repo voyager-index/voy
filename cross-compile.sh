@@ -55,6 +55,11 @@ rm -rf ./"$build_dir"/*.tar.gz
 i=1
 for file in "$build_dir"/*
 do
+    if echo $file | grep -q "sum"
+    then
+        continue
+    fi
+
     printf "%-11s %-6s %-30s\n" "Compressing" "$i/${#platforms[@]}:" "$(basename $file)"
     if echo "$file" | grep -q "windows"
     then
@@ -64,3 +69,7 @@ do
     fi
     ((i+=1))
 done
+
+sums="$build_dir"/sha256sums.txt
+sha256sum "$build_dir"/* > $sums
+gpg --passphrase $(pass show gpgpass) --batch --yes --detach-sign -a $sums
