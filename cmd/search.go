@@ -20,15 +20,16 @@ var searchCmd = &cobra.Command{
     voy search --color --rank --name "portland"
     `,
     Run: func(cmd *cobra.Command, args []string) {
-        rank, _:= cmd.Flags().GetBool("rank")
         color, _:= cmd.Flags().GetBool("color")
         id, _:= cmd.Flags().GetInt("id")
         name, _:= cmd.Flags().GetString("name")
-        MakeRequest(name, rank, color, id);
+        address, _:= cmd.Flags().GetString("address")
+        rank, _:= cmd.Flags().GetBool("rank")
+        MakeRequest(name, rank, color, id, address);
     },
 }
 
-func MakeRequest(name string, rank bool, color bool, id int) {
+func MakeRequest(name string, rank bool, color bool, id int, address string) {
     var data map[string]interface{}
 
     if (id > 0) {
@@ -51,13 +52,8 @@ func MakeRequest(name string, rank bool, color bool, id int) {
         log.Fatalln(err)
     }
 
-    // use with local development
-    url := "http://localhost:5000/city-search"
-    // use for production
-    // url := "https://voyager-index.herokuapp.com/city-search"
-
     bytes := bytes.NewBuffer(bytesRepresentation)
-    resp, err := http.Post(url, "application/json", bytes)
+    resp, err := http.Post(address, "application/json", bytes)
     if err != nil {
         log.Fatalln(err)
     }
@@ -77,10 +73,11 @@ func MakeRequest(name string, rank bool, color bool, id int) {
 }
 
 func init() {
-    var rank bool
     var color bool
     var id int
+    var address string
     var name string
+    var rank bool
     rootCmd.AddCommand(searchCmd)
 
     // Here you will define your flags and configuration settings.
@@ -93,8 +90,9 @@ func init() {
     // is called directly, e.g.:
     // searchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-    rootCmd.PersistentFlags().BoolVarP(&rank, "rank", "r", false, "return rank information.")
+    rootCmd.PersistentFlags().StringVarP(&address, "address", "a", "https://voyager-index.herokuapp.com/city-search", "address to send requests to.")
     rootCmd.PersistentFlags().BoolVarP(&color, "color", "c", false, "enable colored output.")
     rootCmd.PersistentFlags().IntVarP(&id, "id", "i", 0, "search based on city id.")
     rootCmd.PersistentFlags().StringVarP(&name, "name", "n", "", "search based on city name.")
+    rootCmd.PersistentFlags().BoolVarP(&rank, "rank", "r", false, "return rank information.")
 }
